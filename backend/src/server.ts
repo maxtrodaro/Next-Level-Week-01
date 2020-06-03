@@ -1,6 +1,12 @@
-import express, { request, response } from 'express';
+import express from 'express';
+import path from 'path';
+
+import routes from './routes';
 
 const app = express();
+
+app.use(express.json());
+app.use(routes);
 
 /**
  * Rota: Endereço completo da requisição
@@ -12,38 +18,11 @@ const app = express();
  * DELETE: Deletar uma informação no back-end
  *
  * Request Param: Parâmetros que vem da própria rota que identificam um recurso
- * Query Param:
+ * Query Param: Parâmetros que vem na própria rota e geralmente são opcionais: filtros e paginação
+ * Request Body: Parâmetros para criação/edição de informações
  */
 
-const users = ['Eduardo', 'Diego'];
-
-app.get('/users', (request, response) => {
-	const search = String(request.query.search);
-
-	const filteredUsers = search
-		? users.filter((user) => user.includes(search))
-		: users;
-
-	console.log(filteredUsers);
-
-	response.json(filteredUsers);
-});
-
-app.get('/users/:id', (request, response) => {
-	const id = Number(request.params.id);
-
-	const user = users[id];
-
-	return response.json(user);
-});
-
-app.post('/users', (request, response) => {
-	const user = {
-		name: 'Eduardo',
-		email: 'dudurossigodoy2010@gmail.com',
-	};
-
-	return response.json(user);
-});
+// É utilizado desta maneira para passar arquivos estáticos do backend
+app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));
 
 app.listen(3333);
